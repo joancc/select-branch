@@ -1,100 +1,166 @@
 /* eslint-disable no-undef */
 import { createLocalVue, mount } from "@vue/test-utils";
-import Vue from "vue";
+// import Vue from "vue";
 import Vuex from "vuex";
-import { getQueriesForElement, prettyDOM, fireEvent } from "dom-testing-library";
-import SelectBranch from '../SelectBranch.vue';
-import axios from 'axios';
-import store from '../../store';
-const flushPromises = require('flush-promises');
+import {
+  getQueriesForElement,
+  prettyDOM,
+  fireEvent
+} from "dom-testing-library";
+import SelectBranch from "../SelectBranch.vue";
+import GxBranches from "../GxBranches.vue";
+import axios from "axios";
+import store from "../../store";
+// import { promised } from "q";
+const flushPromises = require("flush-promises");
 
-jest.mock('axios');
+jest.mock("axios");
 
-let localVue
+let localVue;
 function render(component, options) {
-    localVue = createLocalVue();
-    localVue.use(Vuex);
-    const wrapper = mount(component, {
-        localVue,
-        attachToDocument: true,
-        ...options
-    });
+  localVue = createLocalVue();
+  localVue.use(Vuex);
+  const wrapper = mount(component, {
+    localVue,
+    attachToDocument: true,
+    ...options
+  });
 
-    return {
-        wrapper,
-        ...getQueriesForElement(wrapper.element),
-        debug: () => console.log(prettyDOM(wrapper.element))
-    };
+  return {
+    wrapper,
+    ...getQueriesForElement(wrapper.element),
+    debug: () => console.log(prettyDOM(wrapper.element))
+  };
 }
 
-describe('SelectBranch.vue', () => {
-    it('renders companies', async (done) => {
-        const companyName = 'Una compañía'
-        axios.get.mockImplementation(() => Promise.resolve({
-            data: [
-                {
-                    "company_id": 1104,
-                    "emitter": {
-                        "tax_id": "VAVV820109B47",
-                        "business_name": companyName,
-                        "commercial_name": companyName,
-                    },
-                }
-            ]
-        }));
+describe("SelectBranch.vue", () => {
+  it("renders companies", async done => {
+    const companyName = "Una compañía";
+    axios.get.mockImplementation(() =>
+      Promise.resolve({
+        data: [
+          {
+            company_id: 1104,
+            emitter: {
+              tax_id: "VAVV820109B47",
+              business_name: companyName,
+              commercial_name: companyName
+            }
+          }
+        ]
+      })
+    );
 
-        const { getByText } = render(SelectBranch, { store });
+    const { getByText } = render(SelectBranch, { store });
 
-        await flushPromises();
+    await flushPromises();
 
-        expect(getByText(companyName)).toBeTruthy();
-        done();
-    })
-    it('highlihgts the selected company', async (done) => {
-        const companyName = 'Una compañía'
-        axios.get.mockImplementation(() => Promise.resolve({
-            data: [
-                {
-                    "company_id": 1104,
-                    "emitter": {
-                        "tax_id": "VAVV820109B47",
-                        "business_name": companyName,
-                        "commercial_name": companyName,
-                    },
-                }
-            ]
-        }));
-        const { getByTestId } = render(SelectBranch, { store });
+    expect(getByText(companyName)).toBeTruthy();
+    done();
+  });
+  it("highlights the selected company", async done => {
+    const companyName = "Una compañía";
+    axios.get.mockImplementation(() =>
+      Promise.resolve({
+        data: [
+          {
+            company_id: 1104,
+            emitter: {
+              tax_id: "VAVV820109B47",
+              business_name: companyName,
+              commercial_name: companyName
+            }
+          }
+        ]
+      })
+    );
+    const { getByTestId } = render(SelectBranch, { store });
 
-        await flushPromises();
+    await flushPromises();
 
-        axios.get.mockImplementation(() => Promise.resolve({
-            data: [
-                {
-                    "branch_id": 1104,
-                    "emitter": {
-                        "tax_id": "VAVV820109B47",
-                        "business_name": companyName,
-                        "commercial_name": companyName,
-                    },
-                }
-            ]
-        }));
+    axios.get.mockImplementation(() =>
+      Promise.resolve({
+        data: [
+          {
+            company_id: 1104,
+            emitter: {
+              tax_id: "VAVV820109B47",
+              business_name: companyName,
+              commercial_name: companyName
+            }
+          }
+        ]
+      })
+    );
 
-        const buttonTestId = `${companyName}_button`;
-        const button = getByTestId(buttonTestId);
-        fireEvent.click(button);
+    const buttonTestId = `${companyName}_button`;
+    const button = getByTestId(buttonTestId);
+    fireEvent.click(button);
 
-        await flushPromises();
+    await flushPromises();
 
-        expect(button.classList.contains('active')).toBe(true);
+    expect(button.classList.contains("active")).toBe(true);
 
-        done();
-    })
-    it('it renders branches when a company is selected', () => {
+    done();
+  });
+  it("it renders branches when a company is selected", async done => {
+    const companyName = "Una compañía";
+    axios.get.mockImplementation(() =>
+      Promise.resolve({
+        data: [
+          {
+            company_id: 1104,
+            emitter: {
+              tax_id: "VAVV820109B47",
+              business_name: companyName,
+              commercial_name: companyName
+            }
+          }
+        ]
+      })
+    );
+    const { getByTestId } = render(SelectBranch, { store });
 
-    })
-    it('highlihgts the selected branch', () => {
+    await flushPromises();
 
-    })
+    axios.get.mockImplementation(() =>
+      Promise.resolve({
+        data: [
+          {
+            branch_id: 1104,
+            emitter: {
+              tax_id: "VAVV820109B47",
+              business_name: companyName,
+              commercial_name: companyName
+            }
+          }
+        ]
+      })
+    );
+
+    const buttonTestId = `${companyName}_button`;
+    const button = getByTestId(buttonTestId);
+
+    fireEvent.click(button);
+    // await flushPromises();
+    const wrapper = mount(GxBranches, { store });
+    expect(wrapper.find(GxBranches).exists()).toBe(true);
+    // const branchName = "Pedido-venta";
+    // axios.get.mockImplementation(() => {
+    //   Promise.resolve({
+    //     data: [
+    //       {
+    //         branch_id: 1104,
+    //         description: "https://gestionixpm.atlassian.net/browse/GXDEV-8210",
+    //         name: branchName
+    //       }
+    //     ]
+    //   });
+    // });
+    // const { getByText } = render(GxBranches, { store });
+    // await flushPromises();
+
+    // expect(getByText(branchName)).toBeTruthy();
+    done();
+  });
 });

@@ -6,7 +6,7 @@
     </div>
     <div class="columns">
       <GxCompanies/>
-      <!-- <GxBranches /> -->
+      <GxBranches />
     </div>
   </div>
 </template>
