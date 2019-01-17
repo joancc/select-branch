@@ -2,15 +2,16 @@
   <div class="item office">
     <button
       class="select-item"
-      :class="{'active': isActive}"
+      :data-testid="`${branch.name}_button`"
+      :class="{ active: isActive }"
       :disabled="!branch.active"
       @click="selectBranch"
     >
       <div class="info">
         <p>
-          <strong>{{branch.name}}</strong>
+          <strong>{{ branch.name }}</strong>
           <span v-if="branch.active" class="on"></span>
-          <span>{{branch.description}}</span>
+          <span>{{ branch.description }}</span>
         </p>
       </div>
     </button>
@@ -42,4 +43,3 @@ export default {
   }
 };
 </script>
-
