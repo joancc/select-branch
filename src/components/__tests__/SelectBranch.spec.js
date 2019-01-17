@@ -11,6 +11,7 @@ import SelectBranch from "../SelectBranch.vue";
 import GxBranches from "../GxBranches.vue";
 import axios from "axios";
 import store from "../../store";
+import { mutations } from "../../mutations";
 // import { promised } from "q";
 const flushPromises = require("flush-promises");
 
@@ -103,7 +104,7 @@ describe("SelectBranch.vue", () => {
 
     done();
   });
-  it("it renders branches when a company is selected", async done => {
+  it("Has GxBranches as a child", async done => {
     const companyName = "Una compañía";
     axios.get.mockImplementation(() =>
       Promise.resolve({
@@ -123,16 +124,15 @@ describe("SelectBranch.vue", () => {
 
     await flushPromises();
 
+    const branchId = 1104;
     axios.get.mockImplementation(() =>
       Promise.resolve({
         data: [
           {
-            branch_id: 1104,
-            emitter: {
-              tax_id: "VAVV820109B47",
-              business_name: companyName,
-              commercial_name: companyName
-            }
+            branch_id: branchId,
+            description: "branch",
+            name: "name branches",
+            type: "Shop"
           }
         ]
       })
@@ -142,25 +142,124 @@ describe("SelectBranch.vue", () => {
     const button = getByTestId(buttonTestId);
 
     fireEvent.click(button);
-    // await flushPromises();
     const wrapper = mount(GxBranches, { store });
     expect(wrapper.find(GxBranches).exists()).toBe(true);
-    // const branchName = "Pedido-venta";
-    // axios.get.mockImplementation(() => {
-    //   Promise.resolve({
-    //     data: [
-    //       {
-    //         branch_id: 1104,
-    //         description: "https://gestionixpm.atlassian.net/browse/GXDEV-8210",
-    //         name: branchName
-    //       }
-    //     ]
-    //   });
-    // });
-    // const { getByText } = render(GxBranches, { store });
-    // await flushPromises();
-
-    // expect(getByText(branchName)).toBeTruthy();
     done();
+  });
+  it("Renders branches when a company is selected ", async done => {
+    const companyName = "Una compañía";
+    axios.get.mockImplementation(() =>
+      Promise.resolve({
+        data: [
+          {
+            company_id: 1104,
+            emitter: {
+              tax_id: "VAVV820109B47",
+              business_name: companyName,
+              commercial_name: companyName
+            }
+          }
+        ]
+      })
+    );
+    const { getByTestId } = render(SelectBranch, { store });
+    await flushPromises();
+
+    const branchId = 1104;
+    axios.get.mockImplementation(() =>
+      Promise.resolve({
+        data: [
+          {
+            branch_id: branchId,
+            description: "branch",
+            name: "name branches",
+            type: "Shop"
+          }
+        ]
+      })
+    );
+    const buttonTestIdCompany = `${companyName}_button`;
+    const button = getByTestId(buttonTestIdCompany);
+    fireEvent.click(button);
+    await flushPromises();
+    const branches = [
+      {
+        branch_id: branchId,
+        description: "branch",
+        name: "name branches",
+        type: "Shop"
+      }
+    ];
+    expect(store.state.branches).toEqual(branches);
+    expect(store.state.selectedBranchId).toBe(null);
+
+    done();
+  });
+  it("Highlights the correct branch", async done => {
+    const companyName = "Una compañía";
+    axios.get.mockImplementation(() =>
+      Promise.resolve({
+        data: [
+          {
+            company_id: 1104,
+            emitter: {
+              tax_id: "VAVV820109B47",
+              business_name: companyName,
+              commercial_name: companyName
+            }
+          }
+        ]
+      })
+    );
+    const { getByTestId } = render(SelectBranch, { store });
+
+    await flushPromises();
+
+    const branchId = 1104;
+    axios.get.mockImplementation(() =>
+      Promise.resolve({
+        data: [
+          {
+            branch_id: branchId,
+            description: "branch",
+            name: "name branches",
+            type: "Shop"
+          }
+        ]
+      })
+    );
+    const buttonTestIdCompany = `${companyName}_button`;
+    const buttonCompany = getByTestId(buttonTestIdCompany);
+    fireEvent.click(buttonCompany);
+
+    await flushPromises();
+    const buttonTestIdBranches = `${branchId}_button`;
+    console.log(buttonTestIdBranches);
+    const buttonBranch = getByTestId(buttonTestIdBranches);
+    fireEvent.click(buttonBranch);
+
+    await flushPromises();
+    expect(store.state.selectedBranchId).toEqual(branchId);
+    expect(buttonBranch.classList.contains("active")).toBe(true);
+    done();
+  });
+
+  it("mutates the company state", () => {
+    const companyName = "Una compañía";
+    const companies = [
+      {
+        company_id: 1104,
+        emitter: {
+          tax_id: "VAVV820109B47",
+          business_name: companyName,
+          commercial_name: companyName
+        }
+      }
+    ];
+    const state = {
+      companies: []
+    };
+    mutations.setCompanies(state, companies);
+    expect(state.companies).toEqual(companies);
   });
 });

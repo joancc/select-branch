@@ -3,7 +3,7 @@ axios.defaults.headers["Cache-Control"] = "no-cache";
 axios.defaults.baseURL = "https://api-test.gestionix.com/api/v3";
 
 export default {
-  async login(context) {
+  async login() {
     const { data } = await axios({
       method: "post",
       url: "/users/authentication",
@@ -13,7 +13,7 @@ export default {
       }
     });
 
-    const { access_token, user_id } = data;
+    const { access_token } = data;
 
     axios.defaults.headers.common["Authorization"] = `Bearer ${access_token}`;
 

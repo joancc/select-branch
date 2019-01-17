@@ -1,5 +1,5 @@
 <template>
-  <div class="column branches is-half" :class="{ 'is-hidden': isHidden }">
+  <div class="column branches is-half">
     <CompanyShops v-if="shops.length > 0" :branches="shops" />
     <CompanyWarehouses v-if="warehouses.length > 0" :branches="warehouses" />
     <CompanyOffices v-if="offices.length > 0" :branches="offices" />

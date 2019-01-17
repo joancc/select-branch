@@ -1,6 +1,7 @@
 <template>
   <div class="item office">
     <button
+      :data-testid="`${branch.branch_id}_button`"
       class="select-item"
       :class="{ active: isActive }"
       :disabled="!branch.active"
