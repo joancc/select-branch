@@ -8,16 +8,11 @@ import {
   fireEvent
 } from "dom-testing-library";
 import SelectBranch from "../SelectBranch.vue";
-import GxBranches from "../GxBranches.vue";
-import CompanyBranch from "../CompanyBranch.vue";
-import CompanyShops from "../CompanyShops.vue";
 import axios from "axios";
 import store from "../../store";
-import mutations from "../../store";
+import { mutations } from "../../mutations";
 
 const flushPromises = require("flush-promises");
-const { selectBranch } = mutations;
-const { selectCompany } = mutations;
 
 jest.mock("axios");
 
@@ -158,7 +153,6 @@ describe("SelectBranch.vue", () => {
       name: branchName,
       type: "Shop"
     };
-    console.log(store.state.branches);
     const buttonTestId = `${companyName}_button`;
     const button = getByTestId(buttonTestId);
     fireEvent.click(button);
@@ -168,7 +162,6 @@ describe("SelectBranch.vue", () => {
     // Branches in the state is different to zero when a company is selected
     expect(store.state.branches.length).toBe(2);
     expect(store.state.branches[0]).toEqual(branchesTestData);
-    console.log(store.state.branches);
 
     done();
   });
@@ -220,7 +213,106 @@ describe("SelectBranch.vue", () => {
     // Change the selectedCompanyId when selected
     expect(store.state.selectedBranchId).toBe(4721);
     console.log(store.state.selectedBranchId);
+    done();
+  });
+  it("Testing mutations changes", () => {
+    const state = {
+      branches: [
+        {
+          branch_id: 4721,
+          active: true,
+          description: "Soy una branch",
+          name: "Soy una branch",
+          type: "Store"
+        },
+        {
+          branch_id: 5072,
+          active: true,
+          description: "Soy una branch",
+          name: "Soy una branch",
+          type: "Store"
+        }
+      ],
+      selectedCompanyId: null
+    };
+    const branchId = 5072;
+    mutations.selectBranch(state, branchId);
+    expect(state.selectedBranchId).toBe(5072);
+    mutations.selectBranch(state, 4721);
+    expect(state.selectedBranchId).toBe(4721);
+  });
+  it("Change company selected when click other company", async done => {
+    axios.get.mockImplementation(() =>
+      Promise.resolve({
+        data: [
+          {
+            company_id: 842,
+            emitter: {
+              tax_id: "VAVV820109B46",
+              business_name: "Soy una compañia 1",
+              commercial_name: "Soy una compañia 1"
+            }
+          },
+          {
+            company_id: 1104,
+            emitter: {
+              tax_id: "VAVV820109B47",
+              business_name: "Soy una compañia 2",
+              commercial_name: "Soy una compañia 2"
+            }
+          }
+        ]
+      })
+    );
+    const { getByTestId } = render(SelectBranch, { store });
 
+    await flushPromises();
+    const buttonTestId = `${"Soy una compañia 1"}_button`;
+    const button = getByTestId(buttonTestId);
+    fireEvent.click(button);
+
+    const buttonTestId2 = `${"Soy una compañia 2"}_button`;
+    const button2 = getByTestId(buttonTestId2);
+    fireEvent.click(button2);
+
+    expect(store.state.selectedCompanyId).toBe(1104);
+    done();
+  });
+  it("Change Branch selected when click other Branch", async done => {
+    axios.get.mockImplementation(() =>
+      Promise.resolve({
+        data: [
+          {
+            company_id: 5072,
+            emitter: {
+              tax_id: "VAVV820109B46",
+              business_name: "Soy una Branch 1",
+              commercial_name: "Soy una Branch 1"
+            }
+          },
+          {
+            company_id: 4721,
+            emitter: {
+              tax_id: "VAVV820109B47",
+              business_name: "Soy una Branch 2",
+              commercial_name: "Soy una Branch 2"
+            }
+          }
+        ]
+      })
+    );
+    const { getByTestId } = render(SelectBranch, { store });
+
+    await flushPromises();
+    const buttonTestId = `${"Soy una Branch 1"}_button`;
+    const button = getByTestId(buttonTestId);
+    fireEvent.click(button);
+
+    const buttonTestId2 = `${"Soy una Branch 2"}_button`;
+    const button2 = getByTestId(buttonTestId2);
+    fireEvent.click(button2);
+
+    expect(store.state.selectedBranchId).toBe(4721);
     done();
   });
 });
