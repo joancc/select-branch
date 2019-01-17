@@ -304,6 +304,7 @@ describe("SelectBranch.vue", () => {
     const { getByTestId } = render(SelectBranch, { store });
 
     await flushPromises();
+
     const buttonTestId = `${"Soy una Branch 1"}_button`;
     const button = getByTestId(buttonTestId);
     fireEvent.click(button);
