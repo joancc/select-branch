@@ -12,8 +12,10 @@
           <span v-if="company.emitter.tax_id"
             >RFC: {{ company.emitter.tax_id }}</span
           >
-          <button @click="showButton = !showButton">Show button</button>
-          <button v-if="isActive && showButton">Botón</button>
+          <button @click="showButton = !showButton" class="showButton">
+            Show button
+          </button>
+          <button v-if="isActive && showButton" class="boton">Botón</button>
         </p>
       </div>
     </button>
