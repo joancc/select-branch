@@ -13,7 +13,7 @@
             >RFC: {{ company.emitter.tax_id }}</span
           >
           <button @click="showButton = !showButton">Show button</button>
-          <button v-if="isActive && showButton">Botón</button>
+          <button v-if="isActive && showButton" class="question">Botón</button>
         </p>
       </div>
     </button>

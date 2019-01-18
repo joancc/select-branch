@@ -10,6 +10,7 @@ import SelectBranch from "../SelectBranch.vue";
 import GxBranches from "../GxBranches.vue";
 import axios from "axios";
 import store from "../../store";
+import GxCompany from "../GxCompany.vue";
 import { mutations } from "../../mutations";
 const flushPromises = require("flush-promises");
 
@@ -275,4 +276,24 @@ it("Highlights the correct branch", async done => {
   expect(store.state.selectedBranchId).toEqual(branchId);
   expect(buttonBranch.classList.contains("active")).toBe(true);
   done();
+});
+
+describe("GxCompany", () => {
+  const companyName = "Una compañía";
+  const { wrapper } = render(GxCompany, {
+    propsData: {
+      company: {
+        company_id: 1104,
+        emitter: {
+          tax_id: "VAVV820109B47",
+          business_name: companyName,
+          commercial_name: companyName
+        }
+      }
+    }
+  });
+  it("Shows the hidden button", () => {
+    // const button = wrapper.findAll("button").at(1);
+    expect(wrapper.data.showButton).toBe(true);
+  });
 });
