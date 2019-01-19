@@ -35,4 +35,14 @@ describe("Select Branch Cypress Test", () => {
       .click();
     cy.get(".boton").should("be.visible");
   });
+  it("Using store", () => {
+    Cypress.Commands.add("vuex", () => cy.window().its("app.$store"));
+
+    Cypress.Commands.add("getCompanies", () => {
+      cy.vuex().invoke("dispatch", "getCompanies");
+      cy.vuex()
+        .its("mutations.selectCompany")
+        .should("state.selectedCompanyId", true);
+    });
+  });
 });
