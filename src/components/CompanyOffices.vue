@@ -4,7 +4,11 @@
       <div class="icon offices"></div>
       <h4>Oficinas</h4>
     </div>
-    <CompanyBranch v-for="branch in branches" :key="branch.branch_id" :branch="branch"/>
+    <CompanyBranch
+      v-for="branch in branches"
+      :key="branch.branch_id"
+      :branch="branch"
+    />
   </div>
 </template>
 <script>

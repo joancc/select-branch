@@ -1,12 +1,10 @@
 <template>
   <!-- selecciona sucursal -->
   <div class="select-branch">
-    <div class="outer-20-b">
-      <a href="#">&lt; Regresar</a>
-    </div>
+    <div class="outer-20-b"><a href="#">&lt; Regresar</a></div>
     <div class="columns">
-      <GxCompanies/>
-      <!-- <GxBranches /> -->
+      <GxCompanies />
+      <GxBranches />
     </div>
   </div>
 </template>

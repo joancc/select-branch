@@ -5,7 +5,12 @@
       <h4>Empresas</h4>
     </div>
     <div v-if="loading">Loading...</div>
-    <GxCompany v-else v-for="company in companies" :company="company" :key="company.company_id"/>
+    <GxCompany
+      v-else
+      v-for="company in companies"
+      :company="company"
+      :key="company.company_id"
+    />
   </div>
 </template>
 <script>

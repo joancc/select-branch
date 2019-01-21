@@ -3,16 +3,17 @@
     <button
       :data-testid="`${company.emitter.commercial_name}_button`"
       class="select-item"
-      :class="{'active': isActive}"
+      :class="{ active: isActive }"
       @click="getBranches()"
     >
       <div class="info">
         <p>
-          <strong>{{ companyDisplayName }}</strong>
-          <span class="on"></span>
-          <span v-if="company.emitter.tax_id">RFC: {{ company.emitter.tax_id }}</span>
+          <strong>{{ companyDisplayName }}</strong> <span class="on"></span>
+          <span v-if="company.emitter.tax_id"
+            >RFC: {{ company.emitter.tax_id }}</span
+          >
           <button @click="showButton = !showButton">Show button</button>
-          <button v-if="isActive && showButton">Botón</button>
+          <button v-if="isActive && showButton" class="question">Botón</button>
         </p>
       </div>
     </button>
