@@ -316,4 +316,38 @@ describe("SelectBranch.vue", () => {
     expect(store.state.selectedBranchId).toBe(4721);
     done();
   });
+  it("Shows a second button when clicks the 'Show button' button", async done => {
+    axios.get.mockImplementation(() =>
+      Promise.resolve({
+        data: [
+          {
+            company_id: 5072,
+            emitter: {
+              tax_id: "VAVV820109B46",
+              business_name: "Soy una Branch 1",
+              commercial_name: "Soy una Branch 1"
+            }
+          },
+          {
+            company_id: 4721,
+            emitter: {
+              tax_id: "VAVV820109B47",
+              business_name: "Soy una Branch 2",
+              commercial_name: "Soy una Branch 2"
+            }
+          }
+        ]
+      })
+    );
+    const { getByTestId } = render(SelectBranch, { store });
+
+    await flushPromises();
+
+    const buttonTestId = `${"Soy una Branch 1"}_button`;
+    const button = getByTestId(buttonTestId);
+    fireEvent.click(button);
+
+    //expect(store.data.showButton).toBe(true);
+    done();
+  });
 });
