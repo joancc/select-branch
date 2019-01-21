@@ -6,8 +6,10 @@ import "./registerServiceWorker";
 
 Vue.config.productionTip = false;
 
-new Vue({
+const myBranch = new Vue({
   router,
   store,
   render: h => h(App)
 }).$mount("#app");
+
+window.app = myBranch;

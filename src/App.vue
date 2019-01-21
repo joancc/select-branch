@@ -4,7 +4,7 @@
       <router-link to="/">Home</router-link> |
       <router-link to="/about">About</router-link>
     </div>-->
-    <div v-if="loading">Loading...</div>
+    <div v-if="loading" class="loading">Loading...</div>
     <router-view v-else />
   </div>
 </template>

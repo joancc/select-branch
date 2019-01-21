@@ -36,6 +36,7 @@ describe("Select Branch Cypress Test", () => {
     cy.get(".boton").should("be.visible");
   });
   it("Using store", () => {
+    cy.visit("/");
     Cypress.Commands.add("vuex", () => cy.window().its("app.$store"));
 
     Cypress.Commands.add("getCompanies", () => {
@@ -44,5 +45,35 @@ describe("Select Branch Cypress Test", () => {
         .its("mutations.selectCompany")
         .should("state.selectedCompanyId", true);
     });
+  });
+  it("The routes for companies http request are working ok", () => {
+    cy.visit("/");
+    cy.server();
+    cy.route({
+      method: "GET",
+      url: "/users/companies"
+    }).as("companyResponse");
+  });
+  it("Store dispatch actions change selectedCompanyId", () => {
+    cy.visit("/");
+    const getStore = () => cy.window().its("app.$store");
+    cy.get(".select-item")
+      .eq(0)
+      .click();
+    getStore()
+      .its("state")
+      .should("contain", {
+        selectedCompanyId: 1104
+      });
+  });
+  it("Dont rendering the app if the credentials are not available", () => {
+    cy.visit("/");
+    cy.server({
+      method: "POST",
+      url: "/users/authentication",
+      status: 401,
+      response: {}
+    });
+    cy.get(".loading").should("be.visible");
   });
 });
